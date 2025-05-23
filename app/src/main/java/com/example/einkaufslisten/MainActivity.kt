@@ -1,5 +1,6 @@
-package com.example.einkaufslisten
+package com.example.einkaufslisten // Paketname – entspricht dem Projektordner
 
+// Imports für Jetpack Compose und Android-Funktionen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,51 +13,61 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+// Hauptaktivität – Einstiegspunkt der App
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // UI mit Jetpack Compose festlegen
         setContent {
-            EinkaufslistenApp()
+            EinkaufslistenApp() // Unsere Haupt-UI-Komponente aufrufen
         }
     }
 }
 
+// UI-Komponente für die gesamte App
 @Composable
 fun EinkaufslistenApp() {
-    var eingabe by remember { mutableStateOf("") }
-    var liste by remember { mutableStateOf(listOf<String>()) }
+    var eingabe by remember { mutableStateOf("") } // Zustand für Eingabefeld
+    var liste by remember { mutableStateOf(listOf<String>()) } // Zustand für Artikelliste
 
+    // Layout: Elemente untereinander anordnen
     Column(modifier = Modifier.padding(16.dp)) {
+
+        // Texteingabe für neuen Artikel
         TextField(
-            value = eingabe,
-            onValueChange = { eingabe = it },
-            label = { Text("Artikel eingeben") },
-            modifier = Modifier.fillMaxWidth()
+            value = eingabe, // aktueller Wert
+            onValueChange = { eingabe = it }, // bei Änderung aktualisieren
+            label = { Text("Artikel eingeben") }, // Beschriftung im Feld
+            modifier = Modifier.fillMaxWidth() // ganze Breite nutzen
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp)) // vertikaler Abstand
 
-        Button(onClick = {
-            if (eingabe.isNotBlank()) {
-                liste = liste + eingabe
-                eingabe = ""
-            }
-        }, modifier = Modifier.fillMaxWidth()) {
-            Text("Hinzufügen")
+        // Button zum Hinzufügen von Artikeln
+        Button(
+            onClick = {
+                if (eingabe.isNotBlank()) { // nur wenn etwas eingegeben wurde kann ->
+                    liste = liste + eingabe // neuer Artikel zur Liste hinzufügen
+                    eingabe = "" // Eingabefeld leeren
+                }
+            },
+            modifier = Modifier.fillMaxWidth() // ganze Breite nutzen
+        ) {
+            Text("Hinzufügen") // Button-Text
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp)) // Abstand zur Liste
 
+        // Anzeige der Artikel in einer scrollbaren Liste
         LazyColumn {
-            items(liste) { artikel ->
+            items(liste) { artikel -> // für jeden Artikel
                 Text(
-                    text = artikel,
+                    text = artikel, // Artikelname anzeigen
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            liste = liste - artikel
-                        }
-                        .padding(8.dp)
+                        .fillMaxWidth() // ganze Breite nutzen
+                        .clickable { liste = liste - artikel } // bei Klick= Artikel entfernen
+                        .padding(8.dp) // Innenabstand
                 )
             }
         }
